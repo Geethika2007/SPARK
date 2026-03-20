@@ -97,3 +97,5 @@ We built a simple frontend prototype demonstrating:
 
 https://drive.google.com/file/d/1_IsTLW9bE64wTeEhV2A7Fy33UtX0yMvZ/view?usp=drive_link
 
+-> Front end Demo
+http://127.0.0.1:5500/index.html
