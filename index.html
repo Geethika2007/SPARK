@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RainShield Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to bottom, #4facfe, #00f2fe);
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            width: 340px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px gray;
+        }
+        input {
+            padding: 10px;
+            width: 90%;
+            margin: 5px;
+        }
+        button {
+            padding: 10px;
+            margin: 8px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 90%;
+        }
+        .hidden {
+            display: none;
+        }
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        canvas {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>🌧 RainShield Pro</h2>
+
+<!-- LOGIN -->
+<div class="container" id="loginPage">
+    <h3>Register</h3>
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="text" id="city" placeholder="City">
+    <button onclick="register()">Continue</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="container hidden" id="dashboard">
+    <h3>Dashboard</h3>
+    <p id="userInfo"></p>
+
+    <h4>Choose Plan</h4>
+    <button onclick="buyPlan(49)">Basic ₹49</button>
+    <button onclick="buyPlan(79)">Pro ₹79</button>
+
+    <p id="planStatus">No Active Plan</p>
+
+    <h4>Total Earnings Protected</h4>
+    <h2 id="earnings">₹0</h2>
+
+    <h4>Rain Simulation</h4>
+    <button onclick="triggerRain()">Trigger Rain</button>
+
+    <div class="status" id="status">No Rain Detected</div>
+
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+let user = "";
+let city = "";
+let planActive = false;
+let earnings = 0;
+
+let payouts = [];
+
+function register() {
+    user = document.getElementById("name").value;
+    city = document.getElementById("city").value;
+
+    if(user && city){
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+
+        document.getElementById("userInfo").innerHTML =
+        "👤 " + user + " | 📍 " + city;
+
+        createChart();
+    } else {
+        alert("Please fill all details");
+    }
+}
+
+function buyPlan(price) {
+    planActive = true;
+    document.getElementById("planStatus").innerHTML =
+    "Active Plan: ₹" + price + "/week";
+}
+
+function triggerRain() {
+    if(!planActive){
+        alert("Please buy a plan first");
+        return;
+    }
+
+    document.getElementById("status").innerHTML =
+    "🌧 Heavy Rain Detected!";
+
+    earnings += 500;
+    payouts.push(earnings);
+
+    document.getElementById("earnings").innerHTML =
+    "₹" + earnings;
+
+    updateChart();
+
+    alert("₹500 Payout Processed!");
+}
+
+// CHART
+let chart;
+
+function createChart() {
+    const ctx = document.getElementById('myChart');
+
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Start"],
+            datasets: [{
+                label: 'Earnings',
+                data: [0]
+            }]
+        }
+    });
+}
+
+function updateChart() {
+    chart.data.labels.push("Payout");
+    chart.data.datasets[0].data.push(earnings);
+    chart.update();
+}
+</script>
+
+</body>
+</html>
